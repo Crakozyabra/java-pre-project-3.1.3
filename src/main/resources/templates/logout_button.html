@@ -1,0 +1,5 @@
+<div sec:authorize="isAuthenticated()" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <button>
+        <a style="text-decoration: none; color: black" th:href="@{/logout}">logout</a>
+    </button>
+</div>
