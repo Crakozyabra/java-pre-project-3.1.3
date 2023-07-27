@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.propertyeditor.RolePropertyEditor;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
@@ -21,6 +24,12 @@ public class UserController {
     private UserService userService;
 
     private RoleService roleService;
+
+    // https://www.baeldung.com/spring-mvc-custom-property-editor
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Role.class, new RolePropertyEditor());
+    }
 
     @GetMapping
     public String getAll(ModelMap model) {

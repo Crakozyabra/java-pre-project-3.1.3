@@ -7,7 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.UserRepositoryImpl;
+import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,14 +17,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepositoryImpl repository;
+    private UserRepository repository;
 
     private PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
     public User save(User user) {
-        user.setRoles(user.getRoles().stream().filter(role -> role.getId() != null).collect(Collectors.toList()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return repository.save(user);
     }

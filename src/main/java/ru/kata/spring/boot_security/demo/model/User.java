@@ -17,16 +17,11 @@ import java.util.*;
 @Setter
 @Slf4j
 @Table(name = "users")
-public class User implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends AbstractBaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
     private String username;
 
-    
     @Column(nullable = false)
     private String password;
 
@@ -42,7 +37,7 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private List<Role> roles;
+    private Set<Role> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

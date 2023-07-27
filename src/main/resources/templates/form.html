@@ -34,11 +34,8 @@
                             </div>
                         </td>
                         <td>
-                            <!--https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html#dynamic-fields-->
-                            <div th:each="role, roleIndex : ${allRoles}">
-                                <input type="checkbox" th:value="${role.id}" th:field="*{roles[__${roleIndex.index}__].id}" />
-                                <input type="hidden" th:value="${role.name}" th:field="*{roles[__${roleIndex.index}__].name}" />
-                                <span th:text="${role.name}"></span>
+                            <div th:each="role : ${allRoles}">
+                                <input type="checkbox" th:text="${role.name}" th:field="*{roles}" th:value="${role.id}"/>
                             </div>
                         </td>
                         <td>
