@@ -36,19 +36,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return repository.findById(id).map(UserServiceImpl::removeIdCryptoPrefix)
+        return repository.findById(id)
+                /*.map(UserServiceImpl::removeIdCryptoPrefix)*/
                 .orElseThrow(() -> new UsernameNotFoundException("User '" + id + "' was not found"));
     }
 
     @Override
     public List<User> getAll() {
-        return repository.getAll().stream().map(UserServiceImpl::removeIdCryptoPrefix).collect(Collectors.toList());
+        return repository.getAll().stream()
+                /*.map(UserServiceImpl::removeIdCryptoPrefix)*/
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User findByUsername(String username) {
-        return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' was not found"));
+    public User findByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' was not found"));
     }
 
     private static User removeIdCryptoPrefix(User user) {
