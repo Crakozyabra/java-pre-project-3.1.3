@@ -44,9 +44,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers( "/index").permitAll()
                 .antMatchers("/", "/users/**").hasAnyRole("ADMIN", "USER")
-                //.antMatchers("/favicon.ico").permitAll()
-                //.antMatchers("/admin/**").hasRole("ADMIN")
-                //.antMatchers("/user/**").hasRole("USER")
                 .and()
                 .formLogin()
                 // https://docs.spring.io/spring-security/site/docs/4.2.20.RELEASE/guides/html5/form-javaconfig.html#configuring-a-custom-login-page

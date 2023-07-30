@@ -14,8 +14,6 @@ import ru.kata.spring.boot_security.demo.propertyeditor.RolePropertyEditor;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.Objects;
-
 @Controller
 @AllArgsConstructor
 @RequestMapping("/")
@@ -34,13 +32,12 @@ public class UserController {
 
     @GetMapping
     public String getAll(ModelMap model, @AuthenticationPrincipal User self) {
-
         log.info("getAll");
         model.addAttribute("self", userService.findById(self.getId()));
         model.addAttribute("userForm", new User());
         model.addAttribute("users", userService.getAll());
         model.addAttribute("allRoles", roleService.getAll());
-        return "admin-panel";
+        return "main";
     }
 
     @PostMapping("/users/{id}")
@@ -50,19 +47,9 @@ public class UserController {
         return "redirect:/";
     }
 
-    /*
-        @GetMapping("/users")
-        public String getForm(@RequestParam(required = false) Long modifiedUserId, ModelMap model) {
-            log.info("getForm");
-            User user = Objects.isNull(modifiedUserId) ? new User() : userService.findById(modifiedUserId);
-            model.addAttribute("user", user);
-            model.addAttribute("allRoles", roleService.getAll());
-            return "form";
-        }
-     */
     @PostMapping("/users")
     public String processForm(User user, @AuthenticationPrincipal User self) {
-        log.info("processForm {}", user);
+        log.info("processForm");
         userService.save(user);
         return "redirect:/";
     }

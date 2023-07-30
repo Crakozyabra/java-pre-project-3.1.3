@@ -14,10 +14,6 @@ spring:
     init:
       mode: always
 
-  # https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#web.servlet.spring-mvc.static-content
-  #mvc:
-   # static-path-pattern: "/resources/images/**"
-
   datasource:
     url: jdbc:mysql://localhost:3306/crud?createDatabaseIfNotExist=true&characterEncoding=UTF-8
     username: root
@@ -26,7 +22,6 @@ spring:
 logging:
   level:
     root: INFO
-    #org.springframework: DEBUG
 
 server.servlet:
   encoding:
