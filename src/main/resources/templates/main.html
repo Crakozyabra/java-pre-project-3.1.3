@@ -151,7 +151,7 @@
                                         <div class="card-body">
                                             <!-- New user form-->
                                             <!--https://bootstrap-4.ru/docs/4.3.1/components/forms/#form-controls-->
-                                            <form th:action="@{/users}" th:object="${userForm}" method="post"
+                                            <form th:action="@{/admin/users}" th:object="${userForm}" method="post"
                                                   class="col-md-6 mx-auto text-center">
                                                 <div class="form-group">
                                                     <label for="newFirstName"><strong>First name</strong></label>
@@ -213,7 +213,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form th:action="@{/users}" th:object="${userForm}" method="post">
+                    <form th:action="@{/admin/users}" th:object="${userForm}" method="post">
                         <div class="modal-body col-md-6 mx-auto text-center">
 
                             <div class="form-group">
@@ -308,7 +308,7 @@
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <form id="deleteForm" method="post" th:action="@{/users/{id}}">
+                        <form id="deleteForm" method="post" th:action="@{/admin/users/{id}}">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
@@ -343,7 +343,7 @@
                     let userId = $(this).attr("data-user-id");
                     setFormField("edit", userId);
                     setFormField("delete", userId);
-                    $("#deleteForm").attr("action", "/users/" + userId);
+                    $("#deleteForm").attr("action", "/admin/users/" + userId);
                 });
             });
         </script>
