@@ -14,7 +14,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/user")
 @Slf4j
 public class UserController {
 

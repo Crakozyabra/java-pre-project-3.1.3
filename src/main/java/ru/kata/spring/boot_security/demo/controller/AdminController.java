@@ -31,13 +31,13 @@ public class AdminController {
     public String delete(@PathVariable Long id) {
         log.info("delete");
         userService.delete(id);
-        return "redirect:/";
+        return "redirect:/user";
     }
 
     @PostMapping("/users")
     public String processForm(User user) {
         log.info("processForm");
         userService.save(user);
-        return "redirect:/";
+        return "redirect:/user";
     }
 }
