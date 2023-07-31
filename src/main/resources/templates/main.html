@@ -126,7 +126,7 @@
                                                     <td th:text="${user.roles}"></td>
                                                     <td>
                                                         <!--https://bootstrap-4.ru/docs/4.3.1/components/modal/#live-demo-->
-                                                        <button th:attr="data-user-id=${user.id}" id="edit-button" type="button"
+                                                        <button th:attr="data-user-id=${user.id}" type="button"
                                                                 class="btn btn-info fill-form-button" data-toggle="modal"
                                                                 data-target="#editUserModal">Edit
                                                         </button>
@@ -151,7 +151,7 @@
                                         <div class="card-body">
                                             <!-- New user form-->
                                             <!--https://bootstrap-4.ru/docs/4.3.1/components/forms/#form-controls-->
-                                            <form th:action="@{/admin/users}" th:object="${userForm}" method="post"
+                                            <form th:action="@{/admin/users}" th:object="${userForm}" th:id="create-form" method="post"
                                                   class="col-md-6 mx-auto text-center">
                                                 <div class="form-group">
                                                     <label for="newFirstName"><strong>First name</strong></label>
@@ -191,7 +191,7 @@
                                                                 th:text="${role.name}"></option>
                                                     </select>
                                                 </div>
-                                                <button class="btn btn-success" type="submit">Add new user</button>
+                                                <button id="create-button" class="btn btn-success" type="submit">Add new user</button>
                                             </form>
                                         </div>
                                     </div>
@@ -213,7 +213,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form th:action="@{/admin/users}" th:object="${userForm}" method="post">
+                    <form th:action="@{/admin/users}" th:object="${userForm}" th:id="edit-form" method="post">
                         <div class="modal-body col-md-6 mx-auto text-center">
 
                             <div class="form-group">
@@ -257,7 +257,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Edit</button>
+                            <button id="edit-button" type="submit" class="btn btn-primary">Edit</button>
                         </div>
                     </form>
                 </div>
@@ -308,8 +308,8 @@
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <form id="deleteForm" method="post" th:action="@{/admin/users/{id}}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                        <form id="delete-form" method="post" th:action="@{/admin/users/{id}}">
+                            <button id="delete-button" type="submit" class="btn btn-danger">Delete</button>
                         </form>
                     </div>
                 </div>
@@ -338,12 +338,79 @@
                     $("#" + formType + "Age").val($("#age" + userId).text());
                     $("#" + formType + "Email").val($("#email" + userId).text());
                 }
+
+                // https://technotrampoline.com/articles/how-to-convert-form-data-to-json-with-jquery/
+                let convertFormToJSON = function (form) {
+                    const array = $(form).serializeArray(); // Encodes the set of form elements as an array of names and values.
+                    const json = {
+                        roles : []
+                    };
+                    $.each(array, function () {
+                        if (this.name === "roles") {
+                            json[this.name].push({"id" : this.value || "", "name" : null});
+                        } else {
+                            json[this.name] = this.value || "";
+                        }
+                    });
+                    return json;
+                }
+
+
+
                 // https://api.jquery.com/on/#on-events-selector-data-handler
                 $(".fill-form-button").on("click", function () {
                     let userId = $(this).attr("data-user-id");
                     setFormField("edit", userId);
                     setFormField("delete", userId);
                     $("#deleteForm").attr("action", "/admin/users/" + userId);
+                });
+
+
+                // https://learn.javascript.ru/fetch#post-zaprosy
+                $("#create-button").on("click", async function (event) {
+                    event.preventDefault();
+                    let user = convertFormToJSON("#create-form");
+                    /*let user = {
+                        'id' : null,
+                        'firstName' : 'fn',
+                        'lastName' : 'ln',
+                        'age' : 300,
+                        'email' : 'mail@mail.ru',
+                        'password' : 'pass',
+                        'roles' : [
+                            {
+                                'id' : 1,
+                                'name' : 'ADMIN'
+                            }
+                        ]
+                    };*/
+                    // const array = $("#create-form").serializeArray();
+                    console.log(user);
+                    let response = await fetch('http://localhost:8080/admin/rest/users', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        body: JSON.stringify(user)
+                    });
+                    //console.log(JSON.stringify(user));
+
+                    let result = await response.json();
+                    console.log(result.message);
+                });
+
+                $("#delete-button").on("click", async function (event) {
+                    event.preventDefault();
+                    // alert("300");
+                    /*let response = await fetch('http://localhost:8080/admin/rest/users');
+                    // let result = await response.text();
+                    let result = await response.json();
+                    console.log(result);
+                    console.log(response.status);*/
+
+
+
+                    //console.log(result.message);
                 });
             });
         </script>

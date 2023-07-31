@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.propertyeditor.RolePropertyEditor;
+import ru.kata.spring.boot_security.demo.dto.RoleDto;
+import ru.kata.spring.boot_security.demo.dto.UserDto;
+import ru.kata.spring.boot_security.demo.propertyeditor.RoleDtoPropertyEditor;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
@@ -24,7 +24,7 @@ public class AdminController {
     // https://www.baeldung.com/spring-mvc-custom-property-editor
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.registerCustomEditor(Role.class, new RolePropertyEditor());
+        binder.registerCustomEditor(RoleDto.class, new RoleDtoPropertyEditor());
     }
 
     @PostMapping("/users/{id}")
@@ -35,7 +35,7 @@ public class AdminController {
     }
 
     @PostMapping("/users")
-    public String processForm(User user) {
+    public String processForm(UserDto user) {
         log.info("processForm");
         userService.save(user);
         return "redirect:/";

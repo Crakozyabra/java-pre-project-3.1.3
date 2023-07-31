@@ -25,9 +25,4 @@ public class Role extends AbstractBaseEntity implements GrantedAuthority {
         System.out.println("getAuthority");
         return "ROLE_" + name;
     }
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }

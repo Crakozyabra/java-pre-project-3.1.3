@@ -2,13 +2,13 @@ package ru.kata.spring.boot_security.demo.propertyeditor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
-import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.dto.RoleDto;
 
 import java.beans.PropertyEditorSupport;
 
 // https://www.baeldung.com/spring-mvc-custom-property-editor
 @Slf4j
-public class RolePropertyEditor extends PropertyEditorSupport {
+public class RoleDtoPropertyEditor extends PropertyEditorSupport {
 
     @SuppressWarnings("deprecation")
     @Override
@@ -17,9 +17,9 @@ public class RolePropertyEditor extends PropertyEditorSupport {
         if (StringUtils.isEmpty(text)) {
             setValue(null);
         } else {
-            Role role = new Role();
-            role.setId(Long.parseLong(text));
-            setValue(role);
+            RoleDto roleDto = new RoleDto();
+            roleDto.setId(Long.parseLong(text));
+            setValue(roleDto);
         }
     }
 }
