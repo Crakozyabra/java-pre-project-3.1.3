@@ -1,6 +1,6 @@
-INSERT INTO users (username, password, birthday)
-VALUES ('admin', '{noop}admin', '1990-01-10'),
-       ('user', '{noop}user', '1995-02-10');
+INSERT INTO users (first_name, last_name, age, email, password)
+VALUES ('admin first name', 'admin last name', 30, 'admin@mail.ru', '{noop}admin'),
+       ('user first name', 'user last name', 20, 'user@mail.ru', '{noop}user');
 
 INSERT INTO roles (name)
 VALUES ('ADMIN'),

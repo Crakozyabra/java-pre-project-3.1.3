@@ -42,20 +42,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
+                .antMatchers( "/index").permitAll()
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
                 .and()
-                .formLogin().successHandler(successUserHandler)
+                .formLogin()
+                // https://docs.spring.io/spring-security/site/docs/4.2.20.RELEASE/guides/html5/form-javaconfig.html#configuring-a-custom-login-page
+                .loginPage("/login")
+                .permitAll()
+                .successHandler(successUserHandler)
                 .permitAll()
                 .and()
                 .logout()
                 .permitAll();
+                //.and().csrf().disable();
     }
 
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        return service::findByUsername;
+        return service::findByEmail;
     }
 }
