@@ -27,7 +27,6 @@ public class AdminRestController {
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody UserDto userDto) {
         log.info("create {}", userDto);
-
         ValidationUtil.checkNew(userDto);
         UserDto created = userService.save(userDto);
         URI uriOfCreatedResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -54,7 +53,6 @@ public class AdminRestController {
     public List<UserDto> getAll() {
         log.info("getAll");
         return userService.getAll();
-        //return "{'number': 300}";
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

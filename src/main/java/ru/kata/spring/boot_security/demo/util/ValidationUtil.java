@@ -13,7 +13,7 @@ public class ValidationUtil {
     }
 
     public static void assureIdConsistent(AbstractBaseDto bean, long id) {
-        if (bean.getId() != null) {
+        if (bean.getId() == null) {
             bean.setId(id);
         } else if (bean.getId() != id) {
             throw new IllegalArgumentException(bean + " must be with id=" + id);
