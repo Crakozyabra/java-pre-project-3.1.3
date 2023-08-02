@@ -206,34 +206,35 @@
                     <div class="form-group">
                         <label for="editID"><strong>ID</strong></label>
                         <!--https://stackoverflow.com/questions/52464940/thdisabled-objects-in-thymeleaf-->
-                        <input id="editID" type="text" class="form-control" disabled>
+                        <input id="editID" name="id" type="text" class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label for="editFirstName"><strong>First name</strong></label>
-                        <input id="editFirstName" type="text" class="form-control" placeholder="First name" required>
+                        <input id="editFirstName" name="firstName" type="text" class="form-control"
+                               placeholder="First name" required>
                     </div>
                     <div class="form-group">
                         <label for="editLastName"><strong>Last name</strong></label>
-                        <input id="editLastName" type="text" class="form-control" placeholder="Last name" required>
+                        <input id="editLastName" name="lastName" type="text" class="form-control"
+                               placeholder="Last name" required>
                     </div>
                     <div class="form-group">
                         <label for="editAge"><strong>Age</strong></label>
-                        <input id="editAge" type="number" class="form-control" placeholder="Age"
-                               required>
+                        <input id="editAge" name="age" type="number" class="form-control" placeholder="Age" required>
                     </div>
                     <div class="form-group">
                         <label for="editEmail"><strong>Email</strong></label>
-                        <input id="editEmail" type="email" class="form-control"
-                               placeholder="Email" required>
+                        <input id="editEmail" name="email" type="email" class="form-control" placeholder="Email"
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="editPassword"><strong>Password</strong></label>
-                        <input id="editPassword" type="password" class="form-control"
+                        <input id="editPassword" name="password" type="password" class="form-control"
                                placeholder="Password" required>
                     </div>
                     <div class="form-group">
                         <label for="editRoles">Role</label>
-                        <select id="editRoles" multiple class="form-control" size="2">
+                        <select id="editRoles" name="roles" multiple class="form-control" size="2">
                             <option value="1">ADMIN</option>
                             <option value="2">USER</option>
                         </select>
@@ -312,14 +313,11 @@
 <script>
 
     let getSelf = async function () {
-        let response = await fetch('http://localhost:8080/user/rest');
+        let response = await fetch('/user/rest');
         return await response.json();
     }
     // fill edit and delete form, set action to delete form
     let setFormField = function (formType, userId) {
-        console.log("setFormField");
-        //console.log($(".fill-form-button").attr("data-user-id"));
-        //console.log($("#id" + userId).text());
         $("#" + formType + "ID").val($("#id" + userId).text());
         $("#" + formType + "FirstName").val($("#firstName" + userId).text());
         $("#" + formType + "LastName").val($("#lastName" + userId).text());
@@ -328,7 +326,7 @@
     }
 
     let createUser = async function (user) {
-        let response = await fetch('http://localhost:8080/admin/rest/users', {
+        let response = await fetch('/admin/rest/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -339,7 +337,7 @@
     }
 
     let updateUser = async function (user, userId) {
-        let response = await fetch('http://localhost:8080/admin/rest/users/' + userId, {
+        let response = await fetch('/admin/rest/users/' + userId, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
@@ -350,12 +348,12 @@
     }
 
     let getAllUsers = async function () {
-        let response = await fetch('http://localhost:8080/admin/rest/users');
+        let response = await fetch('/admin/rest/users');
         return await response.json();
     }
 
     let deleteUser = async function (id) {
-        let response = await fetch('http://localhost:8080/admin/rest/users/' + id, {
+        let response = await fetch('/admin/rest/users/' + id, {
             method: 'DELETE'
         });
         return response.status;
@@ -403,7 +401,6 @@
     }
 
     let setUsersList = function () {
-        console.log("setUsersList");
         getAllUsers().then((users) => {
             let newTbody = $("<tbody>").prop("id", "users-list-tbody");
             users.forEach((user) => {
@@ -413,7 +410,6 @@
                 let tdElem3 = $("<td>").prop("id", "age" + user.id).text(user.age);
                 let tdElem4 = $("<td>").prop("id", "email" + user.id).text(user.email);
                 let tdElem5 = $("<td>").prop("id", "roles" + user.id).text(getRolesView(user.roles));
-
                 let button1 = $("<button>").attr({
                     "data-user-id": user.id,
                     "type": "button",
@@ -422,7 +418,6 @@
                     "data-target": "#editUserModal"
                 }).text("Edit");
                 let tdElem6 = $("<td>").append(button1);
-
                 let button2 = $("<button>").attr({
                     "data-user-id": user.id,
                     "type": "button",
@@ -431,13 +426,10 @@
                     "data-target": "#deleteUserModal"
                 }).text("Delete");
                 let tdElem7 = $("<td>").append(button2);
-
                 let trElem = $("<tr>").append(thElem).append(tdElem1).append(tdElem2).append(tdElem3).append(tdElem4)
                     .append(tdElem5).append(tdElem6).append(tdElem7);
-
                 newTbody.append(trElem);
             });
-
             $("#users-list-tbody").replaceWith(newTbody);
         }).catch(error => {
             console.log(error)
@@ -449,7 +441,6 @@
         setUsersList();
         // https://api.jquery.com/on/#on-events-selector-data-handler
         $(document).on("click", ".fill-form-button", function () {
-            console.log("on click fill-form-button");
             let userId = $(this).attr("data-user-id");
             setFormField("edit", userId);
             setFormField("delete", userId);
@@ -471,7 +462,6 @@
             let userId = $(".delete-button").attr("data-user-id");
             deleteUser(userId)
                 .then(status => {
-                    console.log(status);
                     $('#deleteUserModal').modal('hide');
                     setUsersList();
                 })
@@ -486,10 +476,9 @@
             let userId = $(".edit-button").attr("data-user-id");
             updateUser(user, userId)
                 .then(status => {
-                    console.log("mark");
                     $('#editUserModal').modal('hide');
                     setUsersList();
-                    //setSelfData();
+                    setSelfData();
                 })
                 .catch(error => {
                     console.log(error);
