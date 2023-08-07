@@ -13,11 +13,5 @@ public interface RoleMapper {
 
     Role toEntity(RoleDto roleDto);
 
-   /* @Mapping(target = "id", expression = "java(Long.parseLong(role))")
-    RoleDto stringToDto(String role);*/
-
-
     Set<RoleDto> toToSet(Collection<Role> roles);
-
-   /* Set<RoleDto> toLongToSet(Collection<Long> roles);*/
 }
