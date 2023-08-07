@@ -17,6 +17,8 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @RequiredArgsConstructor
 @Slf4j
 @Configuration
@@ -55,7 +57,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .permitAll()
-                .and().csrf().disable();
+                .and().csrf().disable()
+                // https://docs.spring.io/spring-security/reference/servlet/configuration/java.html#jc-httpsecurity
+                // https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/basic.html
+                .httpBasic(withDefaults());
     }
 
     @Bean
