@@ -1,35 +1,117 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-    <head>
-        <title>Spring Security Example</title>
-    </head>
-    <body>
-        <h1>User, welcome spring boot security page!</h1>
-        <table border="1">
-            <caption>User</caption>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Password</th>
-                    <th>Role</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <!--https://www.thymeleaf.org/doc/articles/springsecurity.html-->
-                        <span sec:authentication="principal.username"></span>
-                    </td>
-                    <td>
-                        <span sec:authentication="principal.password"></span>
-                    </td>
-                    <td>
-                        <span sec:authentication="principal.authorities"></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <br>
-        <div th:include="logout_button.html"></div>
-    </body>
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <!--https://docs.spring.io/spring-boot/docs/2.6.2/reference/htmlsingle/#web.servlet.spring-mvc.static-content-->
+    <!--https://docs.spring.io/spring-boot/docs/3.1.2/reference/htmlsingle/#web.servlet.spring-mvc.favicon-->
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>User page</title>
+</head>
+<body>
+<nav class="navbar navbar-dark  bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">
+        <strong class="self-email"></strong>
+        <span> with roles: </span>
+        <span class="self-roles"></span>
+    </a>
+    <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap" sec:authorize="isAuthenticated()">
+            <a class="nav-link" th:href="@{/logout}">Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill"
+                   href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">User</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="tab-content" id="v-pills-tabContent">
+                <!--https://www.javadevjournal.com/spring-security/spring-security-with-thymeleaf/-->
+                <div id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <h1>User information-page</h1>
+                    <!--https://bootstrap-4.ru/docs/4.3.1/components/card/#header-and-footer-->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>About user</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row" id="self-id"></th>
+                                    <td id="self-first-name"></td>
+                                    <td id="self-last-name"></td>
+                                    <td id="self-age"></td>
+                                    <td class="self-email"></td>
+                                    <td class="self-roles"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script>
+    let getSelf = async function () {
+        let response = await fetch('http://localhost:8080/user/rest');
+        return await response.json();
+    }
+
+    $(function () {
+        // https://javascript.info/async-await#async-functions
+        getSelf()
+            .then(data => {
+                $("#self-id").text(data.id);
+                $("#self-first-name").text(data.firstName);
+                $("#self-last-name").text(data.lastName);
+                $("#self-age").text(data.age);
+                $(".self-email").text(data.email);
+                let rolesView = '';
+                data.roles.forEach((role) => {
+                    rolesView += role.name + ', ';
+                });
+                rolesView = rolesView.slice(0, -2);
+                $(".self-roles").text(rolesView);
+            })
+            .catch(error => {console.log(error)});
+    });
+</script>
+</body>
 </html>

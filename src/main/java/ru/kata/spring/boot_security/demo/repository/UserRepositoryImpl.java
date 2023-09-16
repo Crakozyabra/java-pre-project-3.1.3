@@ -43,9 +43,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return em.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.username = :username", User.class)
-                .setParameter("username", username)
+    public Optional<User> findByEmail(String email) {
+        return em.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email = :email", User.class)
+                .setParameter("email", email)
                 .getResultStream().findAny();
     }
 }

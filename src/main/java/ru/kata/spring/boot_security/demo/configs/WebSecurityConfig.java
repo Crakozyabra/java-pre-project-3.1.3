@@ -17,6 +17,8 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @RequiredArgsConstructor
 @Slf4j
 @Configuration
@@ -28,7 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService service;
 
     // https://docs.spring.io/spring-security/reference/features/authentication/password-storage.html#authentication-password-storage-dpe
-    @SuppressWarnings("deprecation")
     @Bean
     public static PasswordEncoder passwordEncoder() {
         String idForEncode = "noop";
@@ -42,20 +43,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
+                .antMatchers( "/index").permitAll()
+                .antMatchers("/").authenticated()
+                .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
                 .and()
-                .formLogin().successHandler(successUserHandler)
+                .formLogin()
+                // https://docs.spring.io/spring-security/site/docs/4.2.20.RELEASE/guides/html5/form-javaconfig.html#configuring-a-custom-login-page
+                .loginPage("/login")
+                .permitAll()
+                .successHandler(successUserHandler)
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and().csrf().disable()
+                // https://docs.spring.io/spring-security/reference/servlet/configuration/java.html#jc-httpsecurity
+                // https://docs.spring.io/spring-security/reference/servlet/authentication/passwords/basic.html
+                .httpBasic(withDefaults());
     }
 
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        return service::findByUsername;
+        return service::findByEmail;
     }
 }

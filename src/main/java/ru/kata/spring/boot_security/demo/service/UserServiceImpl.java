@@ -6,11 +6,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dto.UserDto;
+import ru.kata.spring.boot_security.demo.dto.UserMapper;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Transactional(readOnly = true)
@@ -21,11 +22,13 @@ public class UserServiceImpl implements UserService {
 
     private PasswordEncoder passwordEncoder;
 
+    private UserMapper userMapper;
+
     @Transactional
     @Override
-    public User save(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return repository.save(user);
+    public UserDto save(UserDto userDto) {
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return userMapper.toTo(repository.save(userMapper.toEntity(userDto)));
     }
 
     @Transactional
@@ -35,24 +38,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
-        return repository.findById(id).map(UserServiceImpl::removeIdCryptoPrefix)
-                .orElseThrow(() -> new UsernameNotFoundException("User '" + id + "' was not found"));
+    public UserDto findById(Long id) {
+        return userMapper.toTo(repository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + id + "' was not found")));
     }
 
     @Override
-    public List<User> getAll() {
-        return repository.getAll().stream().map(UserServiceImpl::removeIdCryptoPrefix).collect(Collectors.toList());
+    public List<UserDto> getAll() {
+        return userMapper.toToList(repository.getAll());
     }
 
     @Override
-    public User findByUsername(String username) {
-        return repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User '" + username + "' was not found"));
-    }
-
-    private static User removeIdCryptoPrefix(User user) {
-        user.setPassword(user.getPassword().replaceAll("\\{.+}",""));
-        return user;
+    public User findByEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' was not found"));
     }
 }
